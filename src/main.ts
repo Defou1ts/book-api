@@ -2,6 +2,8 @@ import { Container } from "inversify";
 import { ContainerModule } from "inversify/lib/container/container_module";
 import { interfaces } from "inversify/lib/interfaces/interfaces";
 import { App } from "./app";
+import { BookController } from "./book/book.controller";
+import { IBookController } from "./book/book.interface";
 import { ILogger } from "./logger/logger.interface";
 import { LoggerService } from "./logger/logger.service";
 import { TYPES } from "./types";
@@ -9,6 +11,7 @@ import { TYPES } from "./types";
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 	bind<App>(TYPES.Application).to(App).inSingletonScope();
+	bind<IBookController>(TYPES.BookController).to(BookController).inSingletonScope();
 });
 
 function bootstrap() {

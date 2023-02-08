@@ -16,28 +16,24 @@ export abstract class BaseController {
 		return this._router;
 	}
 
-	public send<T>(
-		res: Response,
-		code: number,
-		messsage: T
-	): ExpressReturnType {
+	public send<T>(res: Response, code: number, messsage: T): ExpressReturnType {
 		res.type("application/json");
 		return res.status(code).send(messsage);
 	}
 
-	public ok<T>(res:Response, messsage: T):ExpressReturnType {
-		return this.send<T>(res,200,messsage)
+	public ok<T>(res: Response, messsage: T): ExpressReturnType {
+		return this.send<T>(res, 200, messsage);
 	}
 
 	public created(res: Response): ExpressReturnType {
-		return res.sendStatus(201)
+		return res.sendStatus(201);
 	}
 
-	protected bindRoutes(routes:IControllerRoute[]):void {
-		for(const route of routes) {
-			this.logger.log(`[${route.method}] ${route.path}`)
+	protected bindRoutes(routes: IControllerRoute[]): void {
+		for (const route of routes) {
+			this.logger.log(`[${route.method}] ${route.path}`);
 			const handler = route.func.bind(this);
-			this._router[route.method](route.path,handler);
+			this._router[route.method](route.path, handler);
 		}
 	}
 }
