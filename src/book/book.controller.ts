@@ -33,6 +33,6 @@ export class BookController extends BaseController implements IBookController {
 		this.ok<Array<string>>(res, books);
 	}
 	addBook(req: Request, res: Response, next: NextFunction) {
-		this.ok<string>(res, "Book added");
+		this.send(res, 201, req.body);
 	}
 }

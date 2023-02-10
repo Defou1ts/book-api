@@ -5,6 +5,7 @@ import { inject, injectable } from "inversify";
 import { ILogger } from "./logger/logger.interface";
 import { TYPES } from "./types";
 import { BookController } from "./book/book.controller";
+import { ValidateMiddleware } from "./common/validate.middleware";
 
 @injectable()
 export class App {
