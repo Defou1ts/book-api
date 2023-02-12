@@ -1,6 +1,9 @@
 # BOOK API
 
-### use ```npm run dev``` or ```yarn dev``` for development mode with live result monitoring
+### for development mode with live result monitoring use:
+```npm run dev``` 
+or
+```yarn dev```
 
 ### configure .env 
 ```
