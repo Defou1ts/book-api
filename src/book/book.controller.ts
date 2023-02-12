@@ -7,32 +7,39 @@ import { ValidateMiddleware } from "../common/validate.middleware";
 import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
 import { IBookController } from "./book.interface";
+import { IBookRepository } from "./book.respository.interface";
 import { CreateBookDto } from "./dto/create-book.dto";
 
 @injectable()
 export class BookController extends BaseController implements IBookController {
-	constructor(@inject(TYPES.LoggerService) private loggerService: ILogger) {
+	constructor(
+		@inject(TYPES.LoggerService) private loggerService: ILogger,
+		@inject(TYPES.BookRepository) private bookRepository: IBookRepository
+	) {
 		super(loggerService);
 		this.bindRoutes([
 			{
-				path: "/getAll",
+				path: "",
 				method: "get",
 				func: this.getAll,
 			},
 			{
-				path: "/create",
+				path: "",
 				method: "post",
 				func: this.addBook,
 				middlewares: [new ValidateMiddleware(CreateBookDto)],
 			},
 		]);
 	}
-	getAll(req: Request, res: Response, next: NextFunction) {
-		const books = ["book"];
+	async getAll(req: Request, res: Response, next: NextFunction) {
+		const books = await this.bookRepository.getAll();
 
-		this.ok<Array<string>>(res, books);
+		this.send(res, 200, books);
 	}
-	addBook(req: Request, res: Response, next: NextFunction) {
-		this.send(res, 201, req.body);
+
+	async addBook({ body }: Request, res: Response, next: NextFunction) {
+		const book = await this.bookRepository.create(body);
+
+		this.send(res, 201, book);
 	}
 }
