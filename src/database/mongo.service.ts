@@ -17,7 +17,7 @@ export class MongoService implements IMongoService {
 			strictQuery: false,
 		});
 	}
-	getMongoString() {
+	private getMongoString() {
 		return (
 			`mongodb://` +
 			this.configService.get("MONGO_LOGIN") +
@@ -38,5 +38,7 @@ export class MongoService implements IMongoService {
 		this.loggerService.log(`[MongoService] Успешно подключились к базе данных: ${mongoURI}`);
 	}
 
-	disconnect: () => Promise<void>;
+	async disconnect() {
+		await this.client.disconnect();
+	}
 }

@@ -4,6 +4,8 @@ import { interfaces } from "inversify/lib/interfaces/interfaces";
 import { App } from "./app";
 import { BookController } from "./book/book.controller";
 import { IBookController } from "./book/book.interface";
+import { BookRepository } from "./book/book.repository";
+import { IBookRepository } from "./book/book.respository.interface";
 import { IConfigService } from "./config/config.interface";
 import { ConfigService } from "./config/config.service";
 import { MongoService } from "./database/mongo.service";
@@ -18,6 +20,7 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<IConfigService>(TYPES.ConfigService).to(ConfigService).inSingletonScope();
 	bind<ILogger>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 	bind<IMongoService>(TYPES.MongoService).to(MongoService).inSingletonScope();
+	bind<IBookRepository>(TYPES.BookRepository).to(BookRepository).inSingletonScope();
 });
 
 function bootstrap() {

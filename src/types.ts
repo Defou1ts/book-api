@@ -4,4 +4,5 @@ export const TYPES = {
 	BookController: Symbol.for("BookController"),
 	ConfigService: Symbol.for("ConfigService"),
 	MongoService: Symbol.for("MongoService"),
+	BookRepository: Symbol.for("BookRepository"),
 };
