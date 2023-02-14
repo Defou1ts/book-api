@@ -5,7 +5,7 @@ import { Types } from "mongoose";
 import { App } from "./app";
 import { BookController } from "./book/book.controller";
 import { IBookController } from "./book/book.controller.interface";
-import { BookQueue } from "./book/book.queue";
+import { AddBookQueue } from "./book/add-book.queue";
 import { IBookQueue } from "./book/book.queue.interface";
 import { BookRepository } from "./book/book.repository";
 import { IBookRepository } from "./book/book.respository.interface";
@@ -16,6 +16,8 @@ import { IMongoService } from "./database/mongo.service.interface";
 import { ILogger } from "./logger/logger.interface";
 import { LoggerService } from "./logger/logger.service";
 import { TYPES } from "./types";
+import { BaseWoker } from "./common/base.worker";
+import { AddBookWorker } from "./book/add-book.worker";
 
 export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<App>(TYPES.Application).to(App).inSingletonScope();
@@ -24,7 +26,8 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 	bind<IMongoService>(TYPES.MongoService).to(MongoService).inSingletonScope();
 	bind<IBookRepository>(TYPES.BookRepository).to(BookRepository).inSingletonScope();
-	bind<IBookQueue>(TYPES.BookQueue).to(BookQueue).inSingletonScope();
+	bind<IBookQueue>(TYPES.AddBookQueue).to(AddBookQueue).inSingletonScope();
+	bind<BaseWoker>(TYPES.AddBookWorker).to(AddBookWorker).inSingletonScope();
 });
 
 function bootstrap() {

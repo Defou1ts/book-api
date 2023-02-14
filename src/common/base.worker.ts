@@ -1,5 +1,6 @@
-import { Worker, ConnectionOptions, Job } from "bullmq";
-import { injectable } from "inversify";
+import { Worker, Job } from "bullmq";
+import { injectable, unmanaged } from "inversify";
+import { IConfigService } from "../config/config.interface";
 import { ILogger } from "../logger/logger.interface";
 
 @injectable()
@@ -7,14 +8,20 @@ export abstract class BaseWoker {
 	private worker: Worker;
 
 	constructor(
-		private readonly queueName: string,
+		@unmanaged() private readonly queueName: string,
 		private logger: ILogger,
-		private connection: ConnectionOptions
+		private config: IConfigService
 	) {
 		this.worker = new Worker(this.queueName, this.handleJob.bind(this), {
-			connection,
+			connection: {
+				host: this.config.get("REDIS_HOST"),
+				port: +this.config.get("REDIS_PORT"),
+			},
 		});
+		this.logger.log(`[Worker] Worker ${this.queueName} успешно подключен`);
 	}
 
-	abstract handleJob(job: Job<unknown>): Promise<void>;
+	async handleJob(job: Job<unknown>): Promise<void> {
+		this.logger.log(`[WORKER ${job.queueName}]: Задача ${job.name} успешно выполнена`);
+	}
 }

@@ -27,7 +27,7 @@ export abstract class BaseQueue {
 
 	async addJob<T>(jobName: string, job: T) {
 		await this.queue.add(jobName, job);
-		this.logger.log(`[${this.queueName}] В очередь добавлена задача ${jobName}`);
+		this.logger.log(`[QUEUE ${this.queueName}]: В очередь добавлена задача ${jobName}`);
 	}
 
 	async clear() {
