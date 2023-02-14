@@ -6,7 +6,8 @@ import { BaseController } from "../common/base.controller";
 import { ValidateMiddleware } from "../common/validate.middleware";
 import { ILogger } from "../logger/logger.interface";
 import { TYPES } from "../types";
-import { IBookController } from "./book.interface";
+import { IBookController } from "./book.controller.interface";
+import { IBookQueue } from "./book.queue.interface";
 import { IBookRepository } from "./book.respository.interface";
 import { CreateBookDto } from "./dto/create-book.dto";
 
@@ -14,7 +15,8 @@ import { CreateBookDto } from "./dto/create-book.dto";
 export class BookController extends BaseController implements IBookController {
 	constructor(
 		@inject(TYPES.LoggerService) private loggerService: ILogger,
-		@inject(TYPES.BookRepository) private bookRepository: IBookRepository
+		@inject(TYPES.BookRepository) private bookRepository: IBookRepository,
+		@inject(TYPES.BookQueue) private bookQueue: IBookQueue
 	) {
 		super(loggerService);
 		this.bindRoutes([
@@ -38,6 +40,7 @@ export class BookController extends BaseController implements IBookController {
 	}
 
 	async addBook({ body }: Request, res: Response, next: NextFunction) {
+		await this.bookQueue.addCreateBookJob(body);
 		const book = await this.bookRepository.create(body);
 
 		this.send(res, 201, book);

@@ -1,9 +1,12 @@
 import { Container } from "inversify";
 import { ContainerModule } from "inversify/lib/container/container_module";
 import { interfaces } from "inversify/lib/interfaces/interfaces";
+import { Types } from "mongoose";
 import { App } from "./app";
 import { BookController } from "./book/book.controller";
-import { IBookController } from "./book/book.interface";
+import { IBookController } from "./book/book.controller.interface";
+import { BookQueue } from "./book/book.queue";
+import { IBookQueue } from "./book/book.queue.interface";
 import { BookRepository } from "./book/book.repository";
 import { IBookRepository } from "./book/book.respository.interface";
 import { IConfigService } from "./config/config.interface";
@@ -21,6 +24,7 @@ export const appBindings = new ContainerModule((bind: interfaces.Bind) => {
 	bind<ILogger>(TYPES.LoggerService).to(LoggerService).inSingletonScope();
 	bind<IMongoService>(TYPES.MongoService).to(MongoService).inSingletonScope();
 	bind<IBookRepository>(TYPES.BookRepository).to(BookRepository).inSingletonScope();
+	bind<IBookQueue>(TYPES.BookQueue).to(BookQueue).inSingletonScope();
 });
 
 function bootstrap() {

@@ -16,5 +16,5 @@ export abstract class BaseWoker {
 		});
 	}
 
-	abstract handleJob(job: Job): Promise<void>;
+	abstract handleJob(job: Job<unknown>): Promise<void>;
 }

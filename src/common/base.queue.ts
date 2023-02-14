@@ -1,5 +1,6 @@
-import { Queue, ConnectionOptions } from "bullmq";
-import { injectable } from "inversify";
+import { Queue, ConnectionOptions, Job } from "bullmq";
+import { injectable, unmanaged } from "inversify";
+import { IConfigService } from "../config/config.interface";
 import { ILogger } from "../logger/logger.interface";
 
 @injectable()
@@ -7,17 +8,25 @@ export abstract class BaseQueue {
 	private queue: Queue;
 
 	constructor(
-		private readonly queueName: string,
+		@unmanaged() private readonly queueName: string,
 		private logger: ILogger,
-		private connection: ConnectionOptions
+		private config: IConfigService
 	) {
 		this.queue = new Queue(this.queueName, {
-			connection,
+			connection: {
+				host: this.config.get("REDIS_HOST"),
+				port: +this.config.get("REDIS_PORT"),
+			},
 		});
+		this.logger.log(`[Queue] Очередь ${this.queueName} успешно подключена`);
 	}
 
-	async addJob(jobName: string, jobPayload: unknown) {
-		await this.queue.add(jobName, jobPayload);
+	public get name() {
+		return this.queueName;
+	}
+
+	async addJob<T>(jobName: string, job: T) {
+		await this.queue.add(jobName, job);
 		this.logger.log(`[${this.queueName}] В очередь добавлена задача ${jobName}`);
 	}
 
